@@ -8,7 +8,7 @@ import java.sql.SQLOutput;
 
 public class Main {
 
-    private static final int POINTQUANTITY = 3;
+    private static final int POINTQUANTITY = 10;
     private static Point[] pointsCoordinateArray = new Point[POINTQUANTITY];
     private static Circle circle;
 
@@ -30,7 +30,7 @@ public class Main {
         getCircleCenterPoint();
 
         System.out.println("Please enter the radius of circle");
-        circle.setRadius(Double.parseDouble(new BufferedReader(new InputStreamReader(System.in)).readLine()));
+        getCircleCenterRadius();
 
         showPointsSituatedInCircle(pointsCoordinateArray, circle);
 
@@ -95,6 +95,17 @@ public class Main {
             getCircleCenterPoint();
         }
 
+    }
+
+    private static void getCircleCenterRadius(){
+        try {
+            circle.setRadius(Double.parseDouble(new BufferedReader(new InputStreamReader(System.in)).readLine()));
+        }
+        catch (Exception e)
+        {
+            new InputPointException().message();
+            getCircleCenterRadius();
+        }
     }
 
 

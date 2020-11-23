@@ -5,6 +5,6 @@ import java.io.IOException;
 
 public class InputPointException extends IOException {
     public void message() {
-        System.out.println("Inorrect input. Please try again. You should enter digits separated with space");
+        System.out.println("Inorrect input. Please try again. You should enter digits in the required format");
     }
 }
