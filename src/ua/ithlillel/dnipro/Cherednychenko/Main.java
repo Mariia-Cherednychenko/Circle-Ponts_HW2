@@ -5,119 +5,70 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Array;
 import java.sql.SQLOutput;
+import java.util.Scanner;
 
 public class Main {
 
-    private static final int POINTQUANTITY = 10;
-    private static Point[] pointsCoordinateArray = new Point[POINTQUANTITY];
-    private static Circle circle;
+    private static final int POINTQUANTITY = 3;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         // write your code here
 
         System.out.println("Program for checking if chosen points are situated inside the  circle\n");
-        System.out.println("Please enter the coordinates of " + POINTQUANTITY + " points. " +
-                "\nCoordinates of each point should be separated with a space. " +
-                "\nPoints should be entered each from new line" +
-                "\nExample is below:" +
-                "\nX Y" +
-                "\nX Y" +
-                "\n..." +
-                "\nX Y");
 
-        getPointsCoordinates();
+
+        System.out.println("Please enter the coordinates of " + POINTQUANTITY + " points.");
+        Point[] pointsCoordinateArray = getPointsCoordinates();
+
+
         System.out.println("Please enter the coordinates of circle center separated with a space");
-        getCircleCenterPoint();
+        Circle circle = getCircle();
 
-        System.out.println("Please enter the radius of circle");
-        getCircleCenterRadius();
 
         showPointsSituatedInCircle(pointsCoordinateArray, circle);
 
     }
 
-    private static void getPointsCoordinates() throws IOException {
-
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String stringInputLines = "";
-        for (int i = 0; i < POINTQUANTITY; i++) {
-            stringInputLines = stringInputLines + br.readLine()+" ";
-        }
-
-        fillPointArray(createStringInputArray(stringInputLines));
-    }
-
-    private static String [] createStringInputArray(String stringInputLines) throws IOException {
-        String[] stringArray = new String[POINTQUANTITY * 2];
+    private static Point [] getPointsCoordinates() {
+        Point [] pointArray = new Point[POINTQUANTITY];
+        int arrayIndex = 0;
+        Scanner sc = new Scanner(System.in);
         try {
-            stringArray = stringInputLines.split(" ", POINTQUANTITY * 2);
-        } catch (Exception e) {
-            new InputPointException().message();
-            getPointsCoordinates();
-        }
-        return stringArray;
-    }
-
-
-    private static void fillPointArray(String [] stringArray) throws IOException {
-
-
-        int pointArrayIndex = 0;
-
-        for (int i = 0; i < stringArray.length; i = i + 2) {
-
-            try {
-                Point p = new Point(Double.parseDouble(stringArray[i]), Double.parseDouble(stringArray[i + 1]));
-                pointsCoordinateArray[pointArrayIndex] = p;
-            } catch (Exception e) {
-                new InputPointException().message();
-                getPointsCoordinates();
+            for (int i = 0; i < POINTQUANTITY * 2; i = i + 2) {
+                pointArray[arrayIndex] = new Point(sc.nextDouble(), sc.nextDouble());
+                arrayIndex++;
             }
-            pointArrayIndex = pointArrayIndex + 1;
 
-        }
-
-
-    }
-
-    private static void getCircleCenterPoint() throws IOException {
-        String x = new BufferedReader(new InputStreamReader(System.in)).readLine();
-        String[] stringArray = x.split(" ");
-        if (stringArray.length != (2)) {
-            new InputPointException().message();
-            getCircleCenterPoint();
-        }
-
-        try {
-            circle = new Circle(new Point(Double.parseDouble(stringArray[0]), Double.parseDouble(stringArray[1])));
         } catch (Exception e) {
             new InputPointException().message();
-            getCircleCenterPoint();
+          getPointsCoordinates();
         }
-
+        return pointArray;
     }
 
-    private static void getCircleCenterRadius(){
-        try {
-            circle.setRadius(Double.parseDouble(new BufferedReader(new InputStreamReader(System.in)).readLine()));
+    private static Circle getCircle (){
+        Scanner sc = new Scanner(System.in);
+        Circle circle=new Circle();
+        try  {
+            circle = new Circle(new Point(sc.nextDouble(), sc.nextDouble()), sc.nextDouble());
+           if (circle.getRadius()==0){throw new InputPointException ();}
         }
-        catch (Exception e)
-        {
+        catch (InputPointException e){
             new InputPointException().message();
-            getCircleCenterRadius();
+            getCircle();
         }
+        return circle;
     }
-
 
     private static void showPointsSituatedInCircle(Point[] array, Circle circle) {
         boolean check = false;
         for (int i = 0; i < array.length; i++) {
-            if (Point.getDistanceBetweenPoints(array[i], circle.getCenter()) <= circle.getRadius()) {
+            if (circle.getDistanceBetweenPoints(array[i]) <= circle.getRadius()) {
                 System.out.println("Point " + (i + 1) + " with coordinates [" + array[i].getX() + "; " + array[i].getY() + "] is inside the circle.");
-                check=true;
+                check = true;
             }
         }
-        if (!check){
+        if (!check) {
             System.out.println("There are no points inside the circle");
         }
     }

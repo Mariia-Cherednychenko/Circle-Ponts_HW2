@@ -5,8 +5,12 @@ public class Circle {
     private Point center;
     private double radius;
 
-    public Circle(Point center) {
-        this.center = center;
+    public Circle() {
+    }
+
+    public Circle(Point center, double radius) {
+        setCenter(center);
+        setRadius(radius);
     }
 
     public Point getCenter() {
@@ -22,7 +26,14 @@ public class Circle {
     }
 
     public void setRadius(double radius) {
-        this.radius = radius;
+        if (radius > 0) {
+            this.radius = radius;
+        }
+        else new Exception();
+    }
+
+    public  double getDistanceBetweenPoints (Point p){
+        return  (Math.sqrt( Math.pow((this.center.getX()-p.getX()),2)+ Math.pow((this.center.getY()-p.getY()),2)));
     }
 
 }
